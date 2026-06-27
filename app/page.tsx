@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { SearchBar } from "@/components/SearchBar";
 import { MapView } from "@/components/MapView";
 import { SpotList } from "@/components/SpotList";
+import { Disclaimer } from "@/components/Disclaimer";
 import { ReportModal } from "@/components/ReportModal";
 import { loadGoogleMaps } from "@/lib/maps";
 import { searchSmokingSpots } from "@/lib/places";
@@ -104,14 +105,26 @@ export default function Home() {
   }, [center, runSearch]);
 
   return (
-    <main className="mx-auto flex h-[100dvh] max-w-md flex-col bg-brand-pale">
+    <main className="mx-auto flex h-[100dvh] max-w-md flex-col bg-canvas">
       {/* Header */}
-      <header className="z-10 bg-brand px-3 pb-3 pt-4 shadow-md">
-        <div className="mb-3 flex items-center justify-between">
-          <h1 className="text-lg font-bold text-white">
-            Smo<span className="text-brand-light">Spot</span>
-          </h1>
-          <span className="text-xs text-brand-pale">近くの喫煙所を探す</span>
+      <header className="z-20 bg-gradient-to-b from-brand-dark to-brand px-4 pb-4 pt-5 shadow-header">
+        <div className="mb-4 flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <Logo />
+            <div className="leading-none">
+              <h1 className="text-lg font-black tracking-tight text-white">
+                Smo<span className="text-brand-light">Spot</span>
+              </h1>
+              <p className="mt-1 text-[11px] font-medium text-brand-pale/80">
+                近くの喫煙所を、すぐに。
+              </p>
+            </div>
+          </div>
+          {spots.length > 0 && (
+            <span className="rounded-full bg-white/15 px-3 py-1 text-xs font-bold text-white backdrop-blur-sm">
+              {spots.length}件
+            </span>
+          )}
         </div>
         <SearchBar
           onLocate={handleLocate}
@@ -121,20 +134,26 @@ export default function Home() {
       </header>
 
       {/* Map (40vh) */}
-      <div className="h-[40vh] w-full shrink-0 bg-gray-200">
+      <div className="relative -mt-3 h-[40vh] w-full shrink-0 overflow-hidden rounded-t-3xl bg-slate-200 shadow-[0_-8px_24px_rgba(14,42,32,0.08)]">
         <MapView
           center={center}
           spots={spots}
           selectedId={selectedId}
           onSelect={setSelectedId}
         />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-canvas to-transparent" />
       </div>
 
       {/* List */}
       <section className="no-scrollbar flex-1 overflow-y-auto">
         {message && (
-          <p className="px-4 pt-3 text-center text-xs text-brand-dark">{message}</p>
+          <div className="px-4 pt-3">
+            <p className="rounded-xl bg-brand-pale/60 px-3 py-2 text-center text-xs font-semibold text-brand-dark">
+              {message}
+            </p>
+          </div>
         )}
+        <Disclaimer />
         <SpotList
           spots={spots}
           loading={loading}
@@ -152,5 +171,23 @@ export default function Home() {
         />
       )}
     </main>
+  );
+}
+
+/** Minimal logo mark: rounded square with a smoke/location glyph. */
+function Logo() {
+  return (
+    <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/15 ring-1 ring-white/25 backdrop-blur-sm">
+      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none">
+        <path
+          d="M12 2c0 3-3 3.5-3 6"
+          stroke="#D8F3DC"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+        />
+        <rect x="4" y="13" width="13" height="4" rx="1.2" fill="#52B788" />
+        <rect x="18.5" y="13" width="1.5" height="4" rx="0.6" fill="#D8F3DC" />
+      </svg>
+    </div>
   );
 }

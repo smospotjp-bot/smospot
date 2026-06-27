@@ -8,8 +8,12 @@ body {
 }
 
 body {
-  @apply bg-brand-pale text-gray-900 antialiased;
+  @apply text-slate-800 antialiased;
+  background-color: #f4f7f5;
+  font-family: var(--font-noto), system-ui, sans-serif;
   overscroll-behavior-y: none;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 /* Hide scrollbars on the spot list for a cleaner mobile feel. */
@@ -19,4 +23,10 @@ body {
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* Subtle top fade so the list scrolls in elegantly under the map. */
+.list-fade {
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 14px);
+  mask-image: linear-gradient(to bottom, transparent, #000 14px);
 }
