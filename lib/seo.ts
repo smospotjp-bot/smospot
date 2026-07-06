@@ -2,6 +2,8 @@
  * Central SEO config. Set NEXT_PUBLIC_SITE_URL to the production domain in
  * Vercel (e.g. https://smospot.jp). The fallback only affects local builds.
  */
+import type { Area } from "./areas";
+
 export const SITE_URL = (
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://smospot.jp"
 ).replace(/\/$/, "");
@@ -52,7 +54,7 @@ export function webApplicationSchema() {
   };
 }
 
-/** Structured data: FAQ shown on home & area pages. */
+/** Structured data: FAQ shown on home page. */
 export function faqSchema() {
   const qa: [string, string][] = [
     [
@@ -79,6 +81,22 @@ export function faqSchema() {
       "@type": "Question",
       name: q,
       acceptedAnswer: { "@type": "Answer", text: a },
+    })),
+  };
+}
+
+/** Structured data: area-specific FAQ for /tokyo/[area] pages. */
+export function areaFaqSchema(area: Area) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: area.faqs.map((faq) => ({
+      "@type": "Question",
+      name: faq.q,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: faq.a,
+      },
     })),
   };
 }
